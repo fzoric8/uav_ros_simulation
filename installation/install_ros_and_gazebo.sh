@@ -24,15 +24,4 @@ cd "$MY_PATH"
 # Install uav_ros_simulation
 bash $MY_PATH/install.sh
 
-# Setup catkin workspace
-bash $MY_PATH/../ros_packages/uav_ros_stack/installation/workspace_setup.sh
 
-# Build catkin workspace
-ROOT_DIR=`dirname $MY_PATH`
-cd ~/uav_ws/src
-ln -s $ROOT_DIR
-source /opt/ros/$ROS_DISTRO/setup.bash
-catkin build
-
-# Setup Gazebo
-bash $MY_PATH/gazebo/setup_gazebo.sh $HOME/uav_ws/build

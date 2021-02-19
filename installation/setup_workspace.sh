@@ -9,7 +9,9 @@ trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
 # Executes a command when ERR signal is emmitted in this script
 trap 'echo "$0: \"${last_command}\" command failed with exit code $?"' ERR
 
-sudo apt-get -y install git
+distro=`lsb_release -r | awk '{ print $2 }'`
+[ "$distro" = "18.04" ] && ROS_DISTRO="melodic"
+[ "$distro" = "20.04" ] && ROS_DISTRO="noetic"
 
 # get the path to this script
 MY_PATH=`dirname "$0"`
@@ -19,20 +21,15 @@ MY_PATH=`( cd "$MY_PATH" && pwd )`
 
 cd "$MY_PATH"
 
-## | --------------------- install ROS ------------------------ |
+# Setup catkin workspace
+bash $MY_PATH/../ros_packages/uav_ros_stack/installation/workspace_setup.sh
 
-bash $MY_PATH/dependencies/ros.sh
+# Build catkin workspace
+ROOT_DIR=`dirname $MY_PATH`
+cd ~/uav_ws/src
+ln -s $ROOT_DIR
+source /opt/ros/$ROS_DISTRO/setup.bash
+catkin build
 
-## | --------------------- install gitman --------------------- |
-
-bash $MY_PATH/dependencies/gitman.sh
-
-## | ---------------- install gitman submodules --------------- |
-
-gitman install --force
-
-# Install uav_ros_stack
-
-bash $MY_PATH/../ros_packages/uav_ros_stack/installation/install.sh
-
-
+# Setup Gazebo
+bash $MY_PATH/gazebo/setup_gazebo.sh $HOME/uav_ws/build
