@@ -17,8 +17,8 @@ echo "$0: installing Ardupilot Dependencies"
 
 if [ "$distro" = "18.04" ]; then
   #  Toppra dependencies
+  python -m pip install --upgrade pip
   pip install wheel 
-  pip install --upgrade pip
 
 elif [ "$distro" = "20.04" ]; then
   sudo apt -y install python3-pip
